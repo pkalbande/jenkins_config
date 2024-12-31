@@ -1,0 +1,84 @@
+controller:
+  # Custom Image Configuration
+  image: "your-registry/jenkins-custom"
+  tag: "lts"
+  imagePullPolicy: Always
+  imagePullSecrets:
+  - name: registry-credentials
+  # Basic Jenkins Controller Settings
+  numExecutors: 0
+  adminUser: "admin"
+
+  # Use existingSecret for secure password management
+  adminPasswordSecret: true
+  existingSecret: "jenkins-admin-secret"
+  existingSecretPassKey: "jenkins-admin-password"
+
+  # Probes Configuration
+  healthProbes: true
+  probes:
+    startupProbe:
+      httpGet:
+        path: '/login'
+        port: http
+      initialDelaySeconds: 120
+      periodSeconds: 10
+      failureThreshold: 12
+
+  # JCasC Configuration
+  JCasC:
+    enabled: true
+    defaultConfig: false
+    configUrls:
+    - https://raw.githubusercontent.com/your-org/jenkins-config/main/base-config.yaml
+    - https://raw.githubusercontent.com/your-org/jenkins-config/main/credentials.yaml
+    # Include seed jobs configuration
+    configScripts:
+      seed-jobs: |
+        jobs:
+          - script: >
+              folder('applications') {
+                  description('Application Projects')
+              }
+              
+              multibranchPipelineJob('applications/service-one') {
+                  branchSources {
+                      git {
+                          id('service-one')
+                          remote('https://github.com/your-org/service-one.git')
+                          credentialsId('github-creds')
+                          traits {
+                              pruneStaleBranchTrait()
+                              gitBranchDiscovery()
+                          }
+                      }
+                  }
+                  triggers {
+                      periodicFolderTrigger {
+                          interval('5m')
+                      }
+                  }
+              }
+
+  # Resource Configuration
+  resources:
+    requests:
+      cpu: "1000m"
+      memory: "1Gi"
+    limits:
+      cpu: "1000m"
+      memory: "1Gi"
+
+  # Java Options
+  javaOpts: >-
+    -Xms1g  -Xmx1g  -Dhudson.slaves.NodeProvisioner.initialDelay=0  -Djenkins.install.runSetupWizard=false
+
+# RBAC Configuration
+serviceAccount:
+  create: true
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::your-account:role/jenkins-role
+
+rbac:
+  create: true
+  readSecrets: true

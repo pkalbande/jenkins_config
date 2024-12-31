@@ -1,0 +1,29 @@
+persistence:
+  enabled: true
+  storageClass: "managed-premium"
+  size: "50Gi"
+  accessMode: "ReadWriteOnce"
+  annotations:
+    helm.sh/resource-policy: keep
+
+  volumes:
+  - name: jenkins-home
+    persistentVolumeClaim:
+      claimName: jenkins-home-pvc
+  - name: jenkins-workspace
+    persistentVolumeClaim:
+      claimName: jenkins-workspace-pvc
+
+  mounts:
+  - name: jenkins-home
+    mountPath: /var/jenkins_home
+    readOnly: false
+  - name: jenkins-workspace
+    mountPath: /home/jenkins/workspace
+    readOnly: false
+
+controller:
+  securityContext:
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000

@@ -1,0 +1,45 @@
+jenkins:
+  systemMessage: "Jenkins configured by Configuration as Code plugin"
+  numExecutors: 0
+  mode: NORMAL
+  scmCheckoutRetryCount: 2
+  labelString: "jenkins-controller"
+
+  authorizationStrategy:
+    roleBased:
+      roles:
+        global:
+        - name: "admin"
+          description: "Jenkins administrators"
+          permissions:
+          - "Overall/Administer"
+          assignments:
+          - "admin"
+        - name: "developer"
+          description: "Jenkins developers"
+          permissions:
+          - "Overall/Read"
+          - "Job/Build"
+          - "Job/Cancel"
+          assignments:
+          - "developer"
+
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+      - id: ${JENKINS_ADMIN_ID}
+        password: ${JENKINS_ADMIN_PASSWORD}
+
+  clouds:
+  - kubernetes:
+      name: "kubernetes"
+      serverUrl: "https://kubernetes.default"
+      skipTlsVerify: true
+      namespace: "jenkins"
+      jenkinsUrl: "http://jenkins:8080"
+      jenkinsTunnel: "jenkins-agent:50000"
+      maxRequestsPerHost: 32
+      waitForPodSec: 600
+      containerCapStr: "10"
+      podRetention: "never"

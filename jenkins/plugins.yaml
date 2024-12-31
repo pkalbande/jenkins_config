@@ -1,0 +1,15 @@
+controller:
+  installPlugins:
+  - kubernetes:3.16.2
+  - workflow-aggregator:590.v6a_d052e5a_a_b_5
+  - git:5.0.0
+  - configuration-as-code:1569.vb_72405b_80249
+  - job-dsl:1.83
+  - credentials-binding:523.526.v075c0f7a_c20b_
+  - github:1.37.1
+  - pipeline-utility-steps:2.15.3
+  - blueocean:1.25.8
+  - kubernetes-credentials-provider:0.20
+  - workflow-job:1254.v3f64639b_11dd
+  - workflow-cps:3659.v582dc37621d8
+  - role-strategy:563.v9dc911843c4b
