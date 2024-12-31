@@ -74,8 +74,9 @@ controller:
     -Xms1g  -Xmx1g  -Dhudson.slaves.NodeProvisioner.initialDelay=0  -Djenkins.install.runSetupWizard=false
 
 ## RBAC Configuration
-#serviceAccount:
-#  create: true
+serviceAccount:
+  create: true
+
 #  annotations:
 #    eks.amazonaws.com/role-arn: arn:aws:iam::your-account:role/jenkins-role
 #
