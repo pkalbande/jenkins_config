@@ -80,8 +80,9 @@ serviceAccount:
 #  annotations:
 #    eks.amazonaws.com/role-arn: arn:aws:iam::your-account:role/jenkins-role
 #
-#serviceAccountAgent:
-#  create: true
+serviceAccountAgent:
+  create: true
+
 #  name: "jenkins-agent"
 #  annotations: {}
 #
