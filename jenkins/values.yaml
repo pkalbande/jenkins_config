@@ -75,6 +75,12 @@ controller:
   javaOpts: >-
     -Xms1g  -Xmx1g  -Dhudson.slaves.NodeProvisioner.initialDelay=0  -Djenkins.install.runSetupWizard=false
 
+rbac:
+  # -- Whether RBAC resources are created
+  create: true
+  # -- Whether the Jenkins service account should be able to read Kubernetes secrets
+  readSecrets: false
+
 ## RBAC Configuration
 serviceAccount:
   create: true
