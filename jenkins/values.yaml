@@ -62,6 +62,104 @@ controller:
                   }
               }
 
+  sidecars:
+    configAutoReload:
+      # If enabled: true, Jenkins Configuration as Code will be reloaded on-the-fly without a reboot.
+      # If false or not-specified, JCasC changes will cause a reboot and will only be applied at the subsequent start-up.
+      # Auto-reload uses the http://<jenkins_url>/reload-configuration-as-code endpoint to reapply config when changes to
+      # the configScripts are detected.
+      # -- Enables Jenkins Config as Code auto-reload
+      enabled: true
+      image:
+        # -- Registry for the image that triggers the reload
+        registry: docker.io
+        # -- Repository of the image that triggers the reload
+        repository: kiwigrid/k8s-sidecar
+        # -- Tag for the image that triggers the reload
+        tag: 1.27.6
+      imagePullPolicy: IfNotPresent
+      resources: {}
+      #   limits:
+      #     cpu: 100m
+      #     memory: 100Mi
+      #   requests:
+      #     cpu: 50m
+      #     memory: 50Mi
+      # -- Enables additional volume mounts for the config auto-reload container
+      additionalVolumeMounts: []
+      #   - name: auto-reload-config
+      #     mountPath: /var/config/logger
+      #   - name: auto-reload-logs
+      #     mountPath: /var/log/auto_reload
+      # -- Config auto-reload logging settings
+      logging:
+        # See default settings https://github.com/kiwigrid/k8s-sidecar/blob/master/src/logger.py
+        configuration:
+          # -- Enables custom log config utilizing using the settings below.
+          override: false
+          logLevel: INFO
+          formatter: JSON
+          logToConsole: true
+          logToFile: false
+          maxBytes: 1024
+          backupCount: 3
+
+      # -- The scheme to use when connecting to the Jenkins configuration as code endpoint
+      scheme: http
+      # -- Skip TLS verification when connecting to the Jenkins configuration as code endpoint
+      skipTlsVerify: false
+
+      # -- How many connection-related errors to retry on
+      reqRetryConnect: 10
+      # -- How many seconds to wait before updating config-maps/secrets (sets METHOD=SLEEP on the sidecar)
+      sleepTime:
+
+      # -- Environment variable sources for the Jenkins Config as Code auto-reload container
+      envFrom: []
+      # -- Environment variables for the Jenkins Config as Code auto-reload container
+      env: {}
+      #   - name: REQ_TIMEOUT
+      #     value: "30"
+
+      # SSH port value can be set to any unused TCP port. The default, 1044, is a non-standard SSH port that has been chosen at random.
+      # This is only used to reload JCasC config from the sidecar container running in the Jenkins controller pod.
+      # This TCP port will not be open in the pod (unless you specifically configure this), so Jenkins will not be
+      # accessible via SSH from outside the pod. Note if you use non-root pod privileges (runAsUser & fsGroup),
+      # this must be > 1024:
+      sshTcpPort: 1044
+      # folder in the pod that should hold the collected dashboards:
+      folder: "/var/jenkins_home/casc_configs"
+
+      # If specified, the sidecar will search for JCasC config-maps inside this namespace.
+      # Otherwise, the namespace in which the sidecar is running will be used.
+      # It's also possible to specify ALL to search in all namespaces:
+      # searchNamespace:
+      # -- Enable container security context
+      containerSecurityContext:
+        readOnlyRootFilesystem: true
+        allowPrivilegeEscalation: true
+
+    # -- Configures additional sidecar container(s) for the Jenkins controller
+    additionalSidecarContainers: []
+    ## The example below runs the client for https://smee.io as sidecar container next to Jenkins,
+    ## that allows triggering build behind a secure firewall.
+    ## https://jenkins.io/blog/2019/01/07/webhook-firewalls/#triggering-builds-with-webhooks-behind-a-secure-firewall
+    ##
+    ## Note: To use it you should go to https://smee.io/new and update the url to the generated one.
+    # - name: smee
+    #   image: docker.io/twalter/smee-client:1.0.2
+    #   args: ["--port", "{{ .Values.controller.servicePort }}", "--path", "/github-webhook/", "--url", "https://smee.io/new"]
+    #   resources:
+    #     limits:
+    #       cpu: 50m
+    #       memory: 128Mi
+    #     requests:
+    #       cpu: 10m
+    #       memory: 32Mi
+
+    # -- Name of the Kubernetes scheduler to use
+  schedulerName: ""
+
   # Resource Configuration
   resources:
     requests:
