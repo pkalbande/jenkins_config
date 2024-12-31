@@ -1,7 +1,7 @@
 controller:
   # Custom Image Configuration
-  image: "your-registry/jenkins-custom"
-  tag: "lts"
+  image: "parag47/test_jenkins"
+  tag: "4.0"
   imagePullPolicy: Always
   imagePullSecrets:
   - name: registry-credentials
@@ -79,6 +79,19 @@ serviceAccount:
   annotations:
     eks.amazonaws.com/role-arn: arn:aws:iam::your-account:role/jenkins-role
 
+serviceAccountAgent:
+  create: true
+  name: "jenkins-agent"
+  annotations: {}
+
 rbac:
   create: true
   readSecrets: true
+
+agent:
+  enabled: true
+  defaultsProviderTemplate: "jenkins-agent"
+  jenkinsUrl: "http://jenkins.jenkins.svc.cluster.local:8080"
+  connectTimeout: 100
+  workspaceVolume:
+    type: "EmptyDir"
