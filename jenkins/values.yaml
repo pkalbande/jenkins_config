@@ -9,10 +9,9 @@ controller:
   numExecutors: 0
 
   # Use existingSecret for secure password management
-  # Admin Configuration
-  adminUser: "admin"
-  adminPassword: "admin123"
-  #existingSecretPassKey: "jenkins-admin-password"
+  controller:
+  admin:
+    existingSecret: jenkins-admin-secret
 
   # Probes Configuration
   healthProbes: true
