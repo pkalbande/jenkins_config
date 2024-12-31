@@ -13,6 +13,9 @@ controller:
   admin:
     existingSecret: jenkins-admin-secret
 
+  httpsKeyStore:
+    enable: false
+
   # Probes Configuration
   healthProbes: true
   probes:
