@@ -7,12 +7,12 @@ controller:
   - name: registry-credentials
   # Basic Jenkins Controller Settings
   numExecutors: 0
-  adminUser: "admin"
 
   # Use existingSecret for secure password management
-  adminPasswordSecret: true
-  existingSecret: "jenkins-admin-secret"
-  existingSecretPassKey: "jenkins-admin-password"
+  # Admin Configuration
+  adminUser: "admin"
+  adminPassword: "admin123"
+  #existingSecretPassKey: "jenkins-admin-password"
 
   # Probes Configuration
   healthProbes: true
@@ -73,25 +73,25 @@ controller:
   javaOpts: >-
     -Xms1g  -Xmx1g  -Dhudson.slaves.NodeProvisioner.initialDelay=0  -Djenkins.install.runSetupWizard=false
 
-# RBAC Configuration
-serviceAccount:
-  create: true
-  annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::your-account:role/jenkins-role
-
-serviceAccountAgent:
-  create: true
-  name: "jenkins-agent"
-  annotations: {}
-
-rbac:
-  create: true
-  readSecrets: true
-
-agent:
-  enabled: true
-  defaultsProviderTemplate: "jenkins-agent"
-  jenkinsUrl: "http://jenkins.jenkins.svc.cluster.local:8080"
-  connectTimeout: 100
-  workspaceVolume:
-    type: "EmptyDir"
+## RBAC Configuration
+#serviceAccount:
+#  create: true
+#  annotations:
+#    eks.amazonaws.com/role-arn: arn:aws:iam::your-account:role/jenkins-role
+#
+#serviceAccountAgent:
+#  create: true
+#  name: "jenkins-agent"
+#  annotations: {}
+#
+#rbac:
+#  create: true
+#  readSecrets: true
+#
+#agent:
+#  enabled: true
+#  defaultsProviderTemplate: "jenkins-agent"
+#  jenkinsUrl: "http://jenkins.jenkins.svc.cluster.local:8080"
+#  connectTimeout: 100
+#  workspaceVolume:
+#    type: "EmptyDir"
