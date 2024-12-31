@@ -91,6 +91,9 @@ serviceAccount:
 serviceAccountAgent:
   create: false
 
+agent:
+  namespace: ""
+
 #  name: "jenkins-agent"
 #  annotations: {}
 #
