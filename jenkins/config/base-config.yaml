@@ -1,5 +1,5 @@
 jenkins:
-  systemMessage: "Jenkins configured by Configuration as Code plugin"
+  systemMessage: "Jenkins configured by Configuration as Code plugin POI***"
   numExecutors: 0
   mode: NORMAL
   scmCheckoutRetryCount: 2
