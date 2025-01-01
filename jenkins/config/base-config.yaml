@@ -1,2 +1,19 @@
 jenkins:
   systemMessage: "*** Welcome to poi-Jenkins configured with JCasC! ***"
+
+  securityRealm:
+    local:
+      users:
+      - id: "admin"
+        password: "admin123"
+
+# credentials-config.yaml
+credentials:
+  system:
+    domainCredentials:
+    - credentials:
+      - usernamePassword:
+          scope: GLOBAL
+          id: "github-credentials"
+          username: "github-username"
+          password: "github-token"
