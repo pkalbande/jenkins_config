@@ -13,7 +13,7 @@ spec:
       valueFiles:
       - values.yaml
       - persistence-values.yaml
-      - plugins.yaml
+      #- plugins.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: jenkins
