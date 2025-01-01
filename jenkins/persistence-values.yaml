@@ -1,7 +1,7 @@
 persistence:
   enabled: true
   storageClass: "managed-premium"
-  size: "50Gi"
+  size: "10Gi"
   accessMode: "ReadWriteOnce"
   annotations:
     helm.sh/resource-policy: keep
