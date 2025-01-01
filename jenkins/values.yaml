@@ -526,7 +526,7 @@ controller:
     configUrls:
     #  - https://raw.githubusercontent.com/pkalbande/tmp_config/refs/heads/tmp_config/jenkins-casc.yaml
     - https://raw.githubusercontent.com/pkalbande/jenkins_config/refs/heads/main/jenkins/config/base-config.yaml
-    - https://raw.githubusercontent.com/pkalbande/jenkins_config/refs/heads/main/jenkins/config/credentials.yaml
+    #- https://raw.githubusercontent.com/pkalbande/jenkins_config/refs/heads/main/jenkins/config/credentials.yaml
     #- https://raw.githubusercontent.com/pkalbande/tmp_config/refs/heads/tmp_config/job-config.yaml
     # - https://acme.org/jenkins.yaml
     # -- List of Jenkins Config as Code scripts
