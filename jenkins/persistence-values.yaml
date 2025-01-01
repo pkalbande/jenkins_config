@@ -1,29 +1,25 @@
-persistence:
-  enabled: true
-  storageClass: "managed-premium"
-  size: "10Gi"
-  accessMode: "ReadWriteOnce"
-  annotations:
-    helm.sh/resource-policy: keep
-
-  volumes:
-  - name: jenkins-home
-    persistentVolumeClaim:
-      claimName: jenkins-home-pvc
-  - name: jenkins-workspace
-    persistentVolumeClaim:
-      claimName: jenkins-workspace-pvc
-
-  mounts:
-  - name: jenkins-home
-    mountPath: /var/jenkins_home
-    readOnly: false
-  - name: jenkins-workspace
-    mountPath: /home/jenkins/workspace
-    readOnly: false
-
-controller:
-  securityContext:
-    runAsUser: 1000
-    runAsGroup: 1000
-    fsGroup: 1000
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: jenkins-pv-poi
+  #namespace: jenkins
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+  - ReadWriteOnce
+  hostPath:
+    #path: "/mnt/data/jenkins" # This is the path on the Minikube host
+    path: "/var/jenkins_home/casc_configs"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: jenkins-pvc-poi
+  #namespace: jenkins
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi

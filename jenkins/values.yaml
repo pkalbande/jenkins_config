@@ -47,10 +47,17 @@ controller:
     pullPolicy: "Always"
 
     securityContext:
-    runAsUser: 1000
-    runAsGroup: 1000
-    fsGroup: 1000
-    allowPrivilegeEscalation: false
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 1000
+      allowPrivilegeEscalation: false
+
+    podSecurityContext:
+      runAsNonRoot: true
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 1000
+
   # -- Controller image pull secret
   imagePullSecretName: # -- Lifecycle specification for controller-container
 
@@ -104,7 +111,7 @@ controller:
   # This value should not be changed unless you use your custom image of jenkins or any derived from.
   # If you want to use Cloudbees Jenkins Distribution docker, you should set jenkinsHome: "/var/cloudbees-jenkins-distribution"
   # -- Custom Jenkins home path
-  #### jenkinsHome: "/var/jenkins_home"
+  jenkinsHome: "/var/jenkins_home"
 
   # This value should not be changed unless you use your custom image of jenkins or any derived from.
   # If you want to use Cloudbees Jenkins Distribution docker, you should set jenkinsRef: "/usr/share/cloudbees-jenkins-distribution/ref"
@@ -151,9 +158,9 @@ controller:
   # useful for i.e., http_proxy
   # -- Environment variables for Init Container
   #initContainerEnv: []
-  #### initContainerEnv:
-  #### - name: JENKINS_HOME
-  ####   value: /var/jenkins_home
+  initContainerEnv:
+  - name: JENKINS_HOME
+    value: /var/jenkins_home
   #   - name: http_proxy
   #     value: "http://192.168.64.1:3128"
 
@@ -220,7 +227,7 @@ controller:
     runAsUser: 1000
     runAsGroup: 1000
     readOnlyRootFilesystem: true
-    allowPrivilegeEscalation: true
+    allowPrivilegeEscalation: false
 
   # For minikube, set this to NodePort, elsewhere uses LoadBalancer
   # Use ClusterIP if your setup includes ingress controller
@@ -593,23 +600,22 @@ controller:
     configMapAnnotations: {}
 
   # -- Custom init-container specification in raw-yaml format
-  #customInitContainers: []
-  ################################
+  customInitContainers: []
 
-  #### customInitContainers:
-  #### - name: volume-permissions
-  ####   image: busybox
-  ####   command: [ "sh", "-c", "chown -R 1000:1000 /var/jenkins_home" ]
-  ####   volumeMounts:
-  ####   - name: jenkins-home
-  ####     mountPath: /var/jenkins_home
-  ####   securityContext:
-  ####     runAsUser: 1000
-  ####     fsGroup: 1000
-  #### - name: custom-init
-  ####   image: "alpine:3"
-  ####   imagePullPolicy: Always
-  ####   command: [ "uname", "-a" ]
+  ##customInitContainers:
+  ##- name: volume-permissions
+  ##  image: busybox
+  ##  command: [ "sh", "-c", "chown -R 1000:1000 /var/jenkins_home" ]
+  ##  volumeMounts:
+  ##  - name: jenkins-home
+  ##    mountPath: /var/jenkins_home
+  ##  securityContext:
+  ##    runAsUser: 0
+
+  # - name: custom-init
+  #   image: "alpine:3"
+  #   imagePullPolicy: Always
+  #   command: [ "uname", "-a" ]
 
   sidecars:
     configAutoReload:
@@ -686,7 +692,7 @@ controller:
       # -- Enable container security context
       containerSecurityContext:
         readOnlyRootFilesystem: true
-        allowPrivilegeEscalation: true
+        allowPrivilegeEscalation: false
 
     # -- Configures additional sidecar container(s) for the Jenkins controller
     additionalSidecarContainers: []
@@ -1297,7 +1303,7 @@ additionalClouds: {}
 persistence:
   # -- Enable the use of a Jenkins PVC
   enabled: true
-  existingClaim: "jenkins-home-pvc" # Reference the existing PVC
+  existingClaim: "jenkins-pvc-poi" # Reference the existing PVC
   size: "10Gi" # Define the size (optional if using existing PVC)
   storageClass: "" # Leave this blank when using an existing PVC
   accessMode: "ReadWriteOnce"
@@ -1334,7 +1340,6 @@ persistence:
   subPath: # -- Additional volumes
 
   volumes: []
-
   #  - name: nothing
   #    emptyDir: {}
 
