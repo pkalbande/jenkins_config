@@ -1,6 +1,7 @@
 jenkins:
   systemMessage: "*** Welcome to poi-Jenkins configured with JCasC! ***"
 
+  #  security-config.yaml
   securityRealm:
     local:
       users:
@@ -17,3 +18,22 @@ credentials:
           id: "github-credentials"
           username: "github-username"
           password: "github-token"
+
+authorizationStrategy:
+  roleBased:
+    roles:
+      global:
+      - name: "admin"
+        description: "Jenkins administrators"
+        permissions:
+        - "Overall/Administer"
+        assignments:
+        - "admin"
+      - name: "developer"
+        description: "Jenkins developers"
+        permissions:
+        - "Overall/Read"
+        - "Job/Build"
+        - "Job/Cancel"
+        assignments:
+        - "developer"
