@@ -39,7 +39,7 @@ controller:
     repository: "parag47/test_jenkins"
 
     # -- Controller image tag override; i.e., tag: "2.440.1-jdk17"
-    tag: "4.0"
+    tag: "6.0"
 
     # -- Controller image tag label
     #tagLabel: jdk17
@@ -525,8 +525,11 @@ controller:
     # -- Remote URLs for configuration files.
     configUrls:
     #  - https://raw.githubusercontent.com/pkalbande/tmp_config/refs/heads/tmp_config/jenkins-casc.yaml
-    - https://raw.githubusercontent.com/pkalbande/tmp_config/refs/heads/tmp_config/test.yaml
-    - https://raw.githubusercontent.com/pkalbande/tmp_config/tmp_config/banner.yaml
+    - https://raw.githubusercontent.com/pkalbande/jenkins_config/refs/heads/main/jenkins/config/base-config.yaml
+    ## - https://raw.githubusercontent.com/pkalbande/tmp_config/refs/heads/tmp_config/test.yaml
+    ## - https://raw.githubusercontent.com/pkalbande/tmp_config/tmp_config/banner.yaml
+
+
     # - https://acme.org/jenkins.yaml
     # -- List of Jenkins Config as Code scripts
     configScripts:
@@ -556,7 +559,68 @@ controller:
                     additionalClasspath('src/main/groovy')
                   }
                 }
-              } 
+              }
+      2-jenkins-config: |+
+        jenkins:
+          systemMessage: "Jenkins configured automatically by JCasC plugin"
+          numExecutors: 0
+          mode: NORMAL
+          crumbIssuer:
+            standard:
+              excludeClientIPFromCrumb: false
+          
+      3-seed-jobs: |
+        jobs:
+          - script: >
+              folder('microservices') {
+                  description('Microservices Projects')
+              }
+              
+              multibranchPipelineJob('microservices/user-service') {
+                  branchSources {
+                      git {
+                          id('user-service')
+                          remote('https://github.com/your-org/user-service.git')
+                          credentialsId('github-creds')
+                          traits {
+                              pruneStaleBranchTrait()
+                              gitBranchDiscovery()
+                          }
+                      }
+                  }
+                  triggers {
+                      periodicFolderTrigger {
+                          interval('5m')
+                      }
+                  }
+                  orphanedItemStrategy {
+                      discardOldItems {
+                          numToKeep(20)
+                      }
+                  }
+              }
+          
+          - script: >
+              pipelineJob('infra/deployment') {
+                  definition {
+                      cpsScm {
+                          scm {
+                              git {
+                                  remote {
+                                      url('https://github.com/your-org/deployment.git')
+                                      credentials('github-creds')
+                                  }
+                                  branches('*/main')
+                                  scriptPath('Jenkinsfile')
+                              }
+                          }
+                          lightweight(true)
+                      }
+                  }
+                  triggers {
+                      cron('@hourly')
+                  }
+              }
     #job('example-job') {
     #  description('This is an example job created using Job DSL')
     #  steps {
