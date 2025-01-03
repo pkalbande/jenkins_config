@@ -25,7 +25,8 @@ jenkins:
           permissions:
           - "Job/Build"
           - "Job/Read"
-          assignments: []
+          assignments:
+          - "developer"
         agent:
         - name: "agent-role"
           description: "Agent role with limited permissions"
