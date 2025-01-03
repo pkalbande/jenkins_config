@@ -1,5 +1,5 @@
 jenkins:
-  systemMessage: "Welcome to Jenkins configured with JCasC!" # Custom system message
+  systemMessage: "Welcome to Jenkins configured with JCasC! *** poi" # Custom system message
 
   securityRealm:
     local:
@@ -8,3 +8,33 @@ jenkins:
       - id: "admin"
         password: "admin123"
         name: "Administrator"
+
+  authorizationStrategy:
+    roleBased:
+      roles:
+        global:
+        - name: "admin"
+          description: "Administrator with full permissions"
+          permissions:
+          - "Overall/Administer"
+          assignments:
+          - "admin" # Assign the "admin" role to the admin user
+        item:
+        - name: "developer"
+          description: "Developer role with build permissions"
+          permissions:
+          - "Job/Build"
+          - "Job/Read"
+          assignments: []
+        agent:
+        - name: "agent-role"
+          description: "Agent role with limited permissions"
+          permissions:
+          - "Agent/Connect"
+          assignments: []
+
+  tools:
+    git:
+      installations:
+      - name: "Default Git"
+        home: "/usr/bin/git"
