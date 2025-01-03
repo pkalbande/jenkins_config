@@ -3,8 +3,7 @@ jenkins:
 
   securityRealm:
     local:
+      allowsSignup: false
       users:
       - id: "admin"
-        password: "admin" # Set a strong admin password
-        name: "Administrator"
-        email: "admin@example.com"
+        password: "admin123"
