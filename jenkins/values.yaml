@@ -560,59 +560,7 @@ controller:
                   }
                 }
               }
-              
-      3-seed-jobs: |
-        jobs:
-          - script: >
-              folder('microservices') {
-                  description('Microservices Projects')
-              }
-              
-              multibranchPipelineJob('microservices/user-service') {
-                  branchSources {
-                      git {
-                          id('user-service')
-                          remote('https://github.com/your-org/user-service.git')
-                          credentialsId('github-creds')
-                          traits {
-                              pruneStaleBranchTrait()
-                              gitBranchDiscovery()
-                          }
-                      }
-                  }
-                  triggers {
-                      periodicFolderTrigger {
-                          interval('5m')
-                      }
-                  }
-                  orphanedItemStrategy {
-                      discardOldItems {
-                          numToKeep(20)
-                      }
-                  }
-              }
-          
-          - script: >
-              pipelineJob('infra/deployment') {
-                  definition {
-                      cpsScm {
-                          scm {
-                              git {
-                                  remote {
-                                      url('https://github.com/your-org/deployment.git')
-                                      credentials('github-creds')
-                                  }
-                                  branches('*/main')
-                                  scriptPath('Jenkinsfile')
-                              }
-                          }
-                          lightweight(true)
-                      }
-                  }
-                  triggers {
-                      cron('@hourly')
-                  }
-              }
+
     #job('example-job') {
     #  description('This is an example job created using Job DSL')
     #  steps {
