@@ -898,7 +898,9 @@ controller:
     # -- backendconfig annotations
     annotations: {}
     # -- backendconfig spec
-    spec: {}
+    #spec: {}
+    spec:
+    serviceAccountName: jenkins
 
   # Openshift route
   route:

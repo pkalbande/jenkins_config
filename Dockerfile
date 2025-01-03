@@ -19,7 +19,6 @@ RUN jenkins-plugin-cli --plugins \
     job-dsl \
     workflow-cps \
     credentials-binding \
-    kubernetes-credentials-provider \
     workflow-job \
     pipeline-stage-view \
     pipeline-build-step \
