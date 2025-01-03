@@ -7,3 +7,6 @@ jenkins:
       users:
       - id: "admin"
         password: "admin123"
+        name: "Administrator"
+        properties:
+        - email: "admin@example.com"
