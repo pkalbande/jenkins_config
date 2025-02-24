@@ -1,5 +1,7 @@
 #  security-config.yaml
 jenkins:
+  systemMessage: "Welcome to Jenkins configured with JCasC! with Auth Matrix plugin *** poi" # Custom system message
+  
   securityRealm:
     local:
       users:
@@ -18,20 +20,21 @@ credentials:
           password: "github-token"
 
 authorizationStrategy:
-  roleBased:
-    roles:
-      global:
-      - name: "admin"
-        description: "Jenkins administrators"
-        permissions:
-        - "Overall/Administer"
-        assignments:
-        - "admin"
-      - name: "developer"
-        description: "Jenkins developers"
-        permissions:
-        - "Overall/Read"
-        - "Job/Build"
-        - "Job/Cancel"
-        assignments:
-        - "developer"
+    roleBased:
+      roles:
+        global:
+          - name: "admin"
+            description: "Admin role with all permissions"
+            permissions:
+              - "Overall/Administer"
+            assignments:
+              - "admin"
+          - name: "developer"
+            description: "Developer role with limited permissions"
+            permissions:
+              - "Job/Read"
+              - "Job/Build"
+              - "Job/Workspace"
+            assignments:
+              - "dev-user"
+markupFormatter: "safeHtml"
