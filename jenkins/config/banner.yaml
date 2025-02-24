@@ -21,19 +21,34 @@ credentials:
 
 authorizationStrategy:
     roleBased:
-      roles:
+      roleDefinitions:
         global:
           - name: "admin"
-            description: "Admin role with all permissions"
             permissions:
-              - "Overall/Administer"
-            assignments:
-              - "admin"
-          - name: "developer"
-            description: "Developer role with limited permissions"
-            permissions:
-              - "Job/Read"
-              - "Job/Build"
-              - "Job/Workspace"
-            assignments:
-              - "dev-user"
+              - "hudson.model.Hudson.Administer"
+              - "hudson.model.Item.Read"
+      roleAssignments:
+        global:
+          admin: "admin"
+
+  markupFormatter:
+    safeHtml:
+      disableSyntaxHighlighting: false
+
+jobs:
+- script: >
+    folder('generated') {
+      properties {
+        authorizationMatrix {
+          inheritanceStrategy {
+              nonInheriting()
+          }
+          entries {
+            group {
+              name('authenticated')
+              permissions([ 'Job/Build', 'Job/Configure', 'Job/Delete', 'Job/Read' ])
+            }
+          }
+        }
+      }
+    }
