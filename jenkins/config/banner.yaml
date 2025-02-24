@@ -37,4 +37,3 @@ authorizationStrategy:
               - "Job/Workspace"
             assignments:
               - "dev-user"
-markupFormatter: "safeHtml"
