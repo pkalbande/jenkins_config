@@ -20,20 +20,38 @@ credentials:
           password: "github-token"
 
 authorizationStrategy:
-    roleBased:
-      roleDefinitions:
-        global:
-          - name: "admin"
-            permissions:
-              - "hudson.model.Hudson.Administer"
-              - "hudson.model.Item.Read"
-      roleAssignments:
-        global:
-          admin: "admin"
-
-markupFormatter:
-    safeHtml:
-      disableSyntaxHighlighting: false
+      roleBased:
+        roles:
+          global:
+            - name: "admin"
+              description: "Jenkins Administrators"
+              permissions:
+                - "Overall/Administer"
+              entries:
+                - user: "admin"
+            - name: "dev"
+              description: "Jenkins DEV Role"
+              permissions:
+                - "Overall/Read"
+                - "Job/Build"
+                - "Job/Read"
+                - "Job/Cancel"
+                - "Job/Discover"
+                - "View/Read"
+              entries:
+                - user: "tanmayrao2"
+            - name: "devops"
+              description: "Jenkins DEVOPS Role"
+              permissions:
+                - "Overall/Read"
+                - "Job/Build"
+                - "Job/Read"
+                - "Job/Cancel"
+                - "Job/Discover"
+                - "View/Read"
+                - "Job/Configure"
+              entries:
+                - user: "tanmayrao3"
 
 jobs:
 - script: >
