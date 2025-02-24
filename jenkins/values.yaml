@@ -39,7 +39,7 @@ controller:
     repository: "parag47/test_jenkins"
 
     # -- Controller image tag override; i.e., tag: "2.440.1-jdk17"
-    tag: "9.0"
+    tag: "10.0"
 
     # -- Controller image tag label
     #tagLabel: jdk17
