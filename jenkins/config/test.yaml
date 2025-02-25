@@ -3,7 +3,7 @@ jenkins:
 
   securityRealm:
     local:
-      allowsSignup: false
+      #allowsSignup: false
       users:
       - id: "admin"
         password: "admin123"
